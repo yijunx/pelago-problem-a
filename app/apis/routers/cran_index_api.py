@@ -15,9 +15,7 @@ def list_packages():
         r = list_items(item_query=request.query_params)
     except Exception as e:
         return create_response(response=None, success=False, message=str(e)), 500
-    return create_response(
-        response=r
-    )
+    return create_response(response=r)
 
 
 @cran_index_bp.route("", methods=["POST"])
@@ -28,10 +26,4 @@ def post_photo():
         r = create_item(item_create=item_create)
     except Exception as e:
         return create_response(response=None, success=False, message=str(e)), 500
-    return create_response(
-        response=r,
-        message="package created"
-    )
-
-
-
+    return create_response(response=r, message="package created")

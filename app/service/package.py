@@ -19,8 +19,6 @@ def get_db():
         yield session
         session.commit()
     except:
-        # also need to remove the data in the
-        # data storage if possible
         session.rollback()
         raise
     finally:
@@ -77,5 +75,3 @@ def clean_up() -> None:
         maintainerRepo.delete_all(db=db)
         packageRepo.delete_all(db=db)
         developerRepo.delete_all(db=db)
-
-
