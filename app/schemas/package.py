@@ -11,7 +11,7 @@ class PackageCreate(BaseModel):
     publish_date: datetime
     title: str
     description: str
-    
+
     authors: List[Developer]
     maintainers: List[Developer]
 

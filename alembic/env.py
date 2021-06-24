@@ -32,7 +32,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 # create a migration
-# python -m alembic revision --autogenerate -m "message for migration"
+# python -m alembic revision --autogenerate -m "first migration"
 # run migration
 # alembic upgrade head
 

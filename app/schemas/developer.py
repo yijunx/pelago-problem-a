@@ -18,5 +18,3 @@ class Developer(DeveloperCreate):
 class DeveloperWithPagination(BaseModel):
     data: List[Developer]
     paging: ResponsePagination
-
-
