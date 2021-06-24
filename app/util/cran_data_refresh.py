@@ -124,10 +124,9 @@ def parse_desc(package: str, version: str) -> PackageCreate:
     return PackageCreate(**package_data)
 
 
-def main():
+def main(number=10):
 
     clean_up()
-    number = 3
     package_infos = get_a_number_of_package_name_and_version(number=number)
     for p in package_infos:
         item_create = download_and_parse_package_desc(p[0], p[1])
@@ -139,4 +138,4 @@ def main():
 if __name__ == "__main__":
     # get_a_number_of_package_name_and_version()
     # download_package("abbyyR", "0.5.5")
-    main()
+    main(number=10)
