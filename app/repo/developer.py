@@ -1,9 +1,7 @@
-from pydantic.errors import NoneIsAllowedError
 from sqlalchemy.sql.expression import and_, or_
-from app.schemas.pagination import ResponsePagination
-from app.schemas.developer import DeveloperCreate, Developer, DeveloperWithPagination
+from app.schemas.developer import DeveloperCreate, Developer
 from app.db import models
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, query
 from uuid import uuid4
 from typing import List
 
@@ -45,3 +43,25 @@ def batch_create(
         db_item.email = item_create.email or db_item.email
         db_items.append(db_item)
     return db_items
+
+
+def get_all_authors(db: Session, package_id: str) -> List[Developer]:
+    query = db.query(models.Developer)
+    query = query.filter(
+        models.Developer.authored_packages.any(
+            models.AuthorAssociation.package_id == package_id
+        )
+    )
+    db_devs = query.all()
+    return [Developer.from_orm(x) for x in db_devs]
+
+
+def get_all_maintainers(db: Session, package_id: str) -> List[Developer]:
+    query = db.query(models.Developer)
+    query = query.filter(
+        models.Developer.maintained_packages.any(
+            models.MaintainerAssociation.package_id == package_id
+        )
+    )
+    db_devs = query.all()
+    return [Developer.from_orm(x) for x in db_devs]

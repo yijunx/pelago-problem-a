@@ -9,6 +9,7 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
 
+
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
         try:
@@ -21,9 +22,7 @@ class CustomJSONEncoder(JSONEncoder):
             return list(iterable)
         return JSONEncoder.default(self, obj)
 
+
 app.json_encoder = CustomJSONEncoder
 
 app.register_blueprint(cran_index_bp, url_prefix="/api/packages")
-
-
-

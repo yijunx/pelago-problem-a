@@ -62,27 +62,19 @@ def test_get_author_and_maintainer(db: Session):
 
 
 def test_search_package_via_keyword(db: Session):
-    packages_with_paging = packageRepo.get_all(
-        db=db, keyword='here'
-    )
+    packages_with_paging = packageRepo.get_all(db=db, keyword="here")
     assert packages_with_paging.data[0].id == PACKAGE_ID
-    packages_with_paging = packageRepo.get_all(
-        db=db, keyword='test'
-    )
+    packages_with_paging = packageRepo.get_all(db=db, keyword="test")
     assert packages_with_paging.data[0].id == PACKAGE_ID
 
 
 def test_search_package_via_author_id(db: Session):
-    packages_with_paging = packageRepo.get_all(
-        db=db, author_id=DEV_ID_1
-    )
+    packages_with_paging = packageRepo.get_all(db=db, author_id=DEV_ID_1)
     assert packages_with_paging.data[0].id == PACKAGE_ID
 
 
 def test_search_package_via_maintainer_id(db: Session):
-    packages_with_paging = packageRepo.get_all(
-        db=db, maintainer_id=DEV_ID_1
-    )
+    packages_with_paging = packageRepo.get_all(db=db, maintainer_id=DEV_ID_1)
     assert packages_with_paging.data[0].id == PACKAGE_ID
 
 

@@ -2,9 +2,10 @@ from contextlib import contextmanager
 from app.db.database import SessionLocal
 from app.schemas.package import (
     PackageCreate,
-    PackageQuery,
+    PackageWithDevelopers,
     Package,
     PackageWithPagination,
+    PackageQuery,
 )
 from app.repo import package as packageRepo
 from app.repo import developer as developerRepo
@@ -42,6 +43,19 @@ def create_item(item_create: PackageCreate) -> Package:
 
         package = Package.from_orm(db_package)
     return package
+
+
+def get_item(item_id: str) -> PackageWithDevelopers:
+    with get_db() as db:
+        db_item = packageRepo.get(db=db, item_id=item_id)
+        package = Package.from_orm(db_item)
+
+        authors = developerRepo.get_all_authors(db=db, package_id=item_id)
+        maintainers = developerRepo.get_all_maintainers(db=db, package_id=item_id)
+
+    return PackageWithDevelopers(
+        **package.dict(), authors=authors, maintainers=maintainers
+    )
 
 
 def list_items(item_query: PackageQuery) -> PackageWithPagination:

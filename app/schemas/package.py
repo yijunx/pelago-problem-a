@@ -28,6 +28,11 @@ class Package(BaseModel):
         orm_mode = True
 
 
+class PackageWithDevelopers(Package):
+    authors: List[Developer]
+    maintainers: List[Developer]
+
+
 class PackageWithPagination(BaseModel):
     data: List[Package]
     paging: ResponsePagination

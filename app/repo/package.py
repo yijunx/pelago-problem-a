@@ -3,6 +3,7 @@ from app.schemas.pagination import ResponsePagination
 from app.schemas.package import Package, PackageCreate, PackageWithPagination
 from app.db import models
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from uuid import uuid4
 
 
@@ -47,8 +48,8 @@ def get_all(
     if keyword:
         query = query.filter(
             or_(
-                models.Package.description.contains(keyword),
-                models.Package.title.contains(keyword),
+                models.Package.description.ilike(f"%{keyword}%"),
+                models.Package.title.ilike(f"%{keyword}%"),
             )
         )
 

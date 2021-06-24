@@ -79,9 +79,11 @@ def parse_a_pair(key: str, value: str, package_data: dict) -> dict:
         package_data["description"] = value.strip().replace("\n", "").replace("\t", "")
     elif "Author" == key:
         author_names = [x.split("[")[0].strip() for x in value.split(",")]
+        author_names = list(set(author_names))
         package_data["authors"] = [{"name": x} for x in author_names]
     elif "Maintainer" == key:
         maintainer_names = [x.split("<")[0].strip() for x in value.split(",")]
+        maintainer_names = list(set(maintainer_names))
         maintianer_emails = [
             x.split("<")[1].strip().strip(">") for x in value.split(",")
         ]
@@ -138,4 +140,4 @@ def main(number=10):
 if __name__ == "__main__":
     # get_a_number_of_package_name_and_version()
     # download_package("abbyyR", "0.5.5")
-    main(number=10)
+    main(number=50)
