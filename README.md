@@ -1,4 +1,4 @@
-# pelago-problem-a
+# How to use
 
 
 
@@ -12,3 +12,19 @@
 - run the flask app
 
         ```make up```
+
+# About design
+
+- db
+    - 4 tables, author and maintainer table associate package table and developer table. So one developer can be author or maintainer for one or more packages
+    - Unique constraints are added to make sure no duplicates
+    - Used session scope to make sure transactional behavior
+- app
+    - Used blue print to aggregate apis
+    - Used pydantic to check / convert incoming json payload to pydantic models
+    - Api layer -> service layer -> repo layer -> db
+    - Used standard response type to have consistent response (for frontend to use)
+    - Exceptions handling are not done yet, now the api sends the raw error if there is issue
+- deployment
+    - Dockerfile is created
+    - InitContainer is needed for migration and pull data into the database (if deploy to k8s)
