@@ -20,7 +20,7 @@ def list_packages():
 
 @cran_index_bp.route("", methods=["POST"])
 @validate(body=PackageCreate)
-def post_photo():
+def post_package():
     item_create = request.body_params
     try:
         r = create_item(item_create=item_create)
