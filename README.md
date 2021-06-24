@@ -2,17 +2,19 @@
 
 
 
-- open this repo in devcontainer (it will spin up postgre db as well as pgadmin4 for some UI help on postgres, details can be found in .devcontainer/docker-compose-yml)
-- run test 
+- Open this repo in vscode devcontainer (it will spin up postgre db as well as pgadmin4 for some UI help on postgres, details can be found in .devcontainer/docker-compose-yml)
+- Run test 
 
         make test
-- run script to pull data from cran (it takes sometime to do the 50 packages...)
+- Run script to pull data from cran (it takes sometime to do the 50 packages...)
 
         make pull_data
-- run the flask app
+- Run the flask app
 
         make up
         
+- Now we can use it
+
         curl --location --request GET 'localhost:8000/api/packages?keyword=measure'
 
         curl --location --request GET 'localhost:8000/api/packages/<package_id>'
@@ -26,9 +28,10 @@
 - app
     - Used blue print to aggregate apis
     - Used pydantic to check / convert incoming json payload to pydantic models
-    - Api layer -> service layer -> repo layer -> db
+    - api layer -> service layer -> repo layer -> db
     - Used standard response type to have consistent response (for frontend to use)
     - Exceptions handling are not done yet, now the api sends the raw error if there is issue
+    - Gunicorn with async worker
 - deployment
     - Dockerfile is created
     - InitContainer is needed for migration and pull data into the database (if deploy to k8s)
