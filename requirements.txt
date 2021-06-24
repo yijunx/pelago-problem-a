@@ -11,3 +11,4 @@ json-logging
 python-dotenv
 Flask-pydantic
 sqlalchemy
+tqdm
