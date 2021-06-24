@@ -71,9 +71,13 @@ def get_all(
     return PackageWithPagination(data=items, paging=paging)
 
 
-def delete():
-    return
+def get(db: Session, item_id) -> models.Package:
+    return db.query(models.Package).filter(models.Package.id == item_id).first()
 
 
-def delete_all():
-    return
+def delete(db: Session, item_id) -> None:
+    db.query(models.Package).filter(models.Package.id == item_id).delete()
+
+
+def delete_all(db: Session) -> None:
+    db.query(models.Package).delete()

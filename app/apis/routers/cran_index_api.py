@@ -1,96 +1,36 @@
 from flask import Blueprint, Response, request
 from flask_pydantic import validate
-from app.service import photo as photoService
-from app.schemas.photo import PhotoPatch, PhotoQuery, PhotoCreate
+from app.schemas.package import PackageCreate, PackageQuery
 from app.util.requests_util import create_response
+from app.service.package import list_items, create_item
 
 
-photo_bq = Blueprint("photo_bq", __name__)
+cran_index_bp = Blueprint("cran_index_bp", __name__)
 
 
-@photo_bq.route("", methods=["GET"])
-@validate(query=PhotoQuery)
-def list_photos():
-    item_query = request.query_params
+@cran_index_bp.route("", methods=["GET"])
+@validate(query=PackageQuery)
+def list_packages():
     try:
-        r = photoService.list_items(item_query=item_query)
-    except:
-        raise
+        r = list_items(item_query=request.query_params)
+    except Exception as e:
+        return create_response(response=None, success=False, message=str(e)), 500
+    return create_response(
+        response=r
+    )
+
+
+@cran_index_bp.route("", methods=["POST"])
+@validate(body=PackageCreate)
+def post_photo():
+    item_create = request.body_params
+    try:
+        r = create_item(item_create=item_create)
+    except Exception as e:
+        return create_response(response=None, success=False, message=str(e)), 500
     return create_response(
         response=r,
+        message="package created"
     )
 
 
-@photo_bq.route("", methods=["POST"])
-def post_photo():
-    print("photo upload!")
-
-    file = request.files.get("file")
-    title = request.form.get("title")
-    description = request.form.get("description", None)
-    print("got file")
-
-    item_create = PhotoCreate(title=title, description=description)
-
-    try:
-        r = photoService.create_item(item_create=item_create, file=file)
-    except:
-        raise
-
-    return create_response(response=r)
-
-
-@photo_bq.route("/<photo_id>", methods=["GET"])
-def get_photo(photo_id: str):
-
-    try:
-        r = photoService.get_item(item_id=photo_id)
-    except:
-        raise
-    return create_response(response=r)
-
-
-@photo_bq.route("/<photo_id>/content", methods=["GET"])
-def get_photo_content(photo_id: str):
-    try:
-        # look like need to store .xxx for each photo
-        # as some file type...
-        # here we dont return key, just name it photo-some random uid.type
-        key, file = photoService.download_item(item_id=photo_id)
-    except:
-        raise
-
-    return Response(
-        file, headers={"Content-Disposition": f"attachment; filename={key}"}
-    )
-
-
-# @photo_bq.route("/<photo_id>/view", methods=["GET"])
-# @validate(body=PhotoPatch)
-# def get_photo_thumbnail(photo_id: str):
-#     try:
-#         r = photoService.patch_item(
-#             item_id=photo_id, item_patch=request.body_params
-#         )
-#     except:
-#         raise
-#     return create_response(response=r)
-
-
-@photo_bq.route("/<photo_id>", methods=["PATCH"])
-@validate(body=PhotoPatch)
-def update_photo(photo_id: str):
-    try:
-        r = photoService.patch_item(item_id=photo_id, item_patch=request.body_params)
-    except:
-        raise
-    return create_response(response=r)
-
-
-@photo_bq.route("/<photo_id>", methods=["DELETE"])
-def delete_photo(photo_id: str):
-    try:
-        photoService.delete_item(item_id=photo_id)
-    except:
-        raise
-    return create_response(message="Photo deleted")

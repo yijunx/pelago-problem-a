@@ -28,6 +28,11 @@ class Developer(Base):
     name = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=True)
 
+    authored_packages = relationship("AuthorAssociation", back_populates="developer")
+    maintained_packages = relationship(
+        "MaintainerAssociation", back_populates="developer"
+    )
+
 
 class AuthorAssociation(Base):
     __tablename__ = "authorassociations"
@@ -42,7 +47,7 @@ class AuthorAssociation(Base):
     package_id = Column(String, ForeignKey("packages.id"), nullable=False)
 
     package = relationship("Package", back_populates="authors")
-    developer = relationship("Developer", back_populates="packages")
+    developer = relationship("Developer", back_populates="authored_packages")
 
 
 class MaintainerAssociation(Base):
@@ -58,5 +63,5 @@ class MaintainerAssociation(Base):
     developer_id = Column(String, ForeignKey("developers.id"), nullable=False)
     package_id = Column(String, ForeignKey("packages.id"), nullable=False)
 
-    package = relationship("Package", back_populates="authors")
-    developer = relationship("Developer", back_populates="packages")
+    package = relationship("Package", back_populates="maintainers")
+    developer = relationship("Developer", back_populates="maintained_packages")
